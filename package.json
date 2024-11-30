@@ -2,6 +2,11 @@
   "name": "rcm-decision-tool-basic-v1",
   "version": "0.1.0",
   "private": true,
+  "author": {
+    "name": "Dominic",
+    "email": "lasapdominic@gmail.com",
+    "url": "https://reliabilitymanagement.co.uk/"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -9,18 +14,28 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@radix-ui/react-dialog": "^1.0.4",
+    "@radix-ui/react-label": "^2.0.2",
+    "@radix-ui/react-select": "^1.2.2",
+    "@radix-ui/react-slot": "^1.0.2",
+    "class-variance-authority": "^0.6.1",
+    "clsx": "^1.2.1",
+    "lucide-react": "^0.244.0",
+    "next": "14.2.18",
     "react": "^18",
     "react-dom": "^18",
-    "next": "14.2.18"
+    "tailwind-merge": "^1.14.0",
+    "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
-    "typescript": "^5",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "autoprefixer": "10.4.14",
+    "eslint": "^8",
+    "eslint-config-next": "14.2.18",
     "postcss": "^8",
     "tailwindcss": "^3.4.1",
-    "eslint": "^8",
-    "eslint-config-next": "14.2.18"
+    "typescript": "^5"
   }
 }
