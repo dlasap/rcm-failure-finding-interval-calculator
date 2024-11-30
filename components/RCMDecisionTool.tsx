@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ArrowLeft, RotateCcw, Info, Download } from "lucide-react";
 import { questions, answers, assets } from "../utils/rcmData";
-import { RCMState, FailureType, FailureLeg } from "../types/rcm";
+import { RCMState } from "../types/rcm";
 import { InfoDialog } from "./InfoDialog";
 
 const generateJsonData = (state: RCMState) => {
@@ -30,7 +30,7 @@ export default function RCMDecisionTool() {
   const [isNewAsset, setIsNewAsset] = useState(false);
 
   useEffect(() => {
-    if (state.currentStep === "Start" && state.progress > 0) {
+    if (state.currentStep === "Start" && state?.progress && state?.progress > 0) {
       setState((prev) => ({ ...prev, currentStep: questions["Start"].id }));
     }
   }, [state.currentStep, state.progress]);
@@ -43,7 +43,7 @@ export default function RCMDecisionTool() {
 
   const handleAnswer = useCallback((answer: "yes" | "no") => {
     setState((prevState) => {
-      const currentQuestion = questions[prevState.currentStep];
+      const currentQuestion = questions[prevState?.currentStep as string];
       if (!currentQuestion) {
         console.error(`No question found for step: ${prevState.currentStep}`);
         return prevState;
@@ -52,7 +52,7 @@ export default function RCMDecisionTool() {
       const nextStep = answer === "yes" ? currentQuestion.yesNextStep : currentQuestion.noNextStep;
       let newFailureType = prevState.failureType;
       let newFailureLeg = prevState.failureLeg;
-      let newProgress = nextStep in answers ? 100 : Math.min(((prevState.history.length + 1) / prevState.totalSteps) * 100, 100);
+      const newProgress = nextStep in answers ? 100 : Math.min(((prevState?.history?.length ?? 0 + 1) / (prevState?.totalSteps || 0)) * 100, 100);
 
       if (prevState.currentStep === "Start") {
         newFailureType = answer === "yes" ? "Evident" : "Hidden";
@@ -66,19 +66,24 @@ export default function RCMDecisionTool() {
         failureType: newFailureType,
         failureLeg: newFailureLeg,
         progress: newProgress,
-        history: [...prevState.history, prevState.currentStep],
-      };
+        history: [...(prevState?.history as Array<string>), prevState.currentStep],
+      } as RCMState;
     });
   }, []);
 
   const handleBack = useCallback(() => {
     setState((prevState) => {
-      if (prevState.history.length === 0) {
+      if (prevState.history && prevState.history.length === 0) {
         return prevState;
       }
-      const newHistory = [...prevState.history];
+      const newHistory = [...(prevState.history as Array<string>)];
       const previousStep = newHistory.pop();
-      const newProgress = previousStep in answers ? 100 : Math.max((newHistory.length / prevState.totalSteps) * 100, 0);
+
+      if (!previousStep) {
+        return prevState;
+      }
+
+      const newProgress = previousStep in answers ? 100 : Math.max((newHistory.length / (prevState?.totalSteps || 0)) * 100, 0);
       return {
         ...prevState,
         currentStep: previousStep || "Start",
@@ -109,7 +114,7 @@ export default function RCMDecisionTool() {
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
-    link.download = `rcm_decision_${state.asset.replace(/\s+/g, "_").toLowerCase()}_${new Date().toISOString().split("T")[0]}.json`;
+    link.download = `rcm_decision_${state?.asset?.replace(/\s+/g, "_").toLowerCase()}_${new Date().toISOString().split("T")[0]}.json`;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -117,7 +122,7 @@ export default function RCMDecisionTool() {
   }, [state]);
 
   const currentStepNumber = useMemo(() => {
-    return state.history.length + 1;
+    return state?.history?.length ?? 0 + 1;
   }, [state.history]);
 
   const renderProgressBar = () => {
@@ -136,7 +141,7 @@ export default function RCMDecisionTool() {
   };
 
   const renderQuestion = () => {
-    const question = questions[state.currentStep];
+    const question = questions[state.currentStep as string];
     if (!question) {
       return <p>Error: Question not found</p>;
     }
@@ -170,7 +175,7 @@ export default function RCMDecisionTool() {
   };
 
   const renderAnswer = () => {
-    const answer = answers[state.currentStep];
+    const answer = answers[state.currentStep as string];
     if (!answer) {
       return <p>Error: Answer not found</p>;
     }
@@ -223,7 +228,7 @@ export default function RCMDecisionTool() {
               setState((prev) => ({
                 ...prev,
                 currentStep: "Start",
-                progress: (1 / prev.totalSteps) * 100,
+                progress: (1 / (prev.totalSteps ?? 1)) * 100,
                 asset: isNewAsset ? newAsset : prev.asset,
               }));
             }}
@@ -315,7 +320,7 @@ export default function RCMDecisionTool() {
   return (
     <div className="min-h-screen bg-background flex flex-col items-center justify-center p-4">
       <h1 className="text-4xl font-bold mb-8 text-center">RCM Decision Tool</h1>
-      {state.currentStep === "Start" && state.progress === 0 && state.history.length === 0 ? (
+      {state.currentStep === "Start" && state.progress === 0 && state.history && state.history.length === 0 ? (
         <>
           {renderInputForm()}
           <div className="mt-6 text-sm text-muted-foreground max-w-2xl text-center">
@@ -334,12 +339,12 @@ export default function RCMDecisionTool() {
       ) : (
         <>
           {renderProgressBar()}
-          {state.currentStep in questions ? renderQuestion() : renderAnswer()}
+          {(state?.currentStep as string) in questions ? renderQuestion() : renderAnswer()}
           <div className="mt-6 flex flex-col sm:flex-row justify-between w-full max-w-2xl space-y-4 sm:space-y-0 sm:space-x-4">
             <Button
               variant="outline"
               onClick={handleBack}
-              disabled={state.history.length === 0}
+              disabled={state?.history && state?.history.length === 0}
               className="w-full sm:w-auto h-16 text-lg font-semibold"
             >
               <ArrowLeft className="mr-2 h-4 w-4" />

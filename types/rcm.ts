@@ -22,14 +22,14 @@ export interface Answer {
 }
 
 export interface RCMState {
-  currentStep: string;
-  failureType: FailureType | null;
-  failureLeg: FailureLeg | null;
-  asset: string;
-  failureMode: string;
-  progress: number;
-  history: string[];
-  totalSteps: number;
-  newAsset: string;
-  isNewAsset: boolean;
+  currentStep?: string;
+  failureType?: FailureType | null;
+  failureLeg?: FailureLeg | null;
+  asset?: string;
+  failureMode?: string;
+  progress?: number;
+  history?: string[];
+  totalSteps?: number;
+  newAsset?: string;
+  isNewAsset?: boolean;
 }
