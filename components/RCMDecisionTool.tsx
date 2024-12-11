@@ -10,6 +10,7 @@ import { ArrowLeft, RotateCcw, Info, Download } from "lucide-react";
 import { questions, answers, assets } from "../utils/rcmData";
 import { RCMState } from "../types/rcm";
 import { InfoDialog } from "./InfoDialog";
+import Image from "next/image";
 
 const generateJsonData = (state: RCMState) => {
   return JSON.stringify(state, null, 2);
@@ -319,7 +320,10 @@ export default function RCMDecisionTool() {
 
   return (
     <div className="min-h-screen bg-background flex flex-col items-center justify-center p-4">
-      <h1 className="text-4xl font-bold mb-8 text-center">RCM Decision Tool</h1>
+      <div className="flex gap-3 items-center justify-center mb-4">
+        <Image src="/android-chrome-192x192.png" alt="Reliability Management Ltd" width={70} height={70} className="inline-block ml-2" />{" "}
+        <h1 className="text-4xl font-bold text-center">RCM Decision Tool</h1>
+      </div>
       {state.currentStep === "Start" && state.progress === 0 && state.history && state.history.length === 0 ? (
         <>
           {renderInputForm()}
@@ -334,6 +338,7 @@ export default function RCMDecisionTool() {
                 Reliability Management Ltd
               </a>
             </p>
+            <Image src="/android-chrome-192x192.png" alt="Reliability Management Ltd" width={50} height={50} className="inline-block ml-2" />
           </div>
         </>
       ) : (
