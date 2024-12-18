@@ -1,5 +1,5 @@
 {
-  "name": "rcm-decision-tool-basic-v1",
+  "name": "rcm-failure-interval-finding-calculator",
   "version": "0.1.0",
   "private": true,
   "author": {
@@ -14,18 +14,26 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@hookform/resolvers": "^3.9.1",
+    "@radix-ui/react-accordion": "^1.2.2",
     "@radix-ui/react-dialog": "^1.0.4",
     "@radix-ui/react-label": "^2.0.2",
+    "@radix-ui/react-radio-group": "^1.2.2",
     "@radix-ui/react-select": "^1.2.2",
     "@radix-ui/react-slot": "^1.0.2",
+    "@radix-ui/react-switch": "^1.1.2",
+    "@radix-ui/react-toast": "^1.2.4",
     "class-variance-authority": "^0.6.1",
     "clsx": "^1.2.1",
     "lucide-react": "^0.244.0",
     "next": "14.2.18",
     "react": "^18",
     "react-dom": "^18",
+    "react-hook-form": "^7.54.1",
+    "recharts": "^2.15.0",
     "tailwind-merge": "^1.14.0",
-    "tailwindcss-animate": "^1.0.7"
+    "tailwindcss-animate": "^1.0.7",
+    "zod": "^3.24.1"
   },
   "devDependencies": {
     "@types/node": "^20",
