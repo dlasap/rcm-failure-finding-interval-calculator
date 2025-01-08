@@ -13,6 +13,7 @@ import Link from "next/link";
 import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 import { useSettings } from "@/lib/settings-context";
 import { formatNumber } from "@/lib/utils";
+import withAuth from "@/components/withAuth";
 
 const schema = z.object({
   mtbfProtective: z.number().positive(),
@@ -83,7 +84,7 @@ function formatInterval(years: number, decimalSeparator: "." | ","): string {
   }
 }
 
-export default function RiskBasedVotingFFICalculator() {
+function RiskBasedVotingFFICalculator() {
   const [result, setResult] = useState<number | null>(null);
   const [warnings, setWarnings] = useState<string[]>([]);
   const { settings } = useSettings();
@@ -124,8 +125,8 @@ export default function RiskBasedVotingFFICalculator() {
         <AlertTitle>Information</AlertTitle>
         <AlertDescription>
           This formula determines the interval for testing a protective system with an m-out-of-n voting logic, where n is the total number of
-          parallel protective devices, and m is the number needed to activate the protection. The formula uses &apos;r&apos;, which is calculated as:
-          r = n - m + 1. For example, in a 2-out-of-3 voting system, n = 3, m = 2, and r = 2.
+          parallel protective devices, and m is the number needed to activate the protection. The formula uses 'r', which is calculated as: r = n - m
+          + 1. For example, in a 2-out-of-3 voting system, n = 3, m = 2, and r = 2.
         </AlertDescription>
       </Alert>
       <Card>
@@ -194,3 +195,5 @@ export default function RiskBasedVotingFFICalculator() {
     </div>
   );
 }
+
+export default withAuth(RiskBasedVotingFFICalculator);

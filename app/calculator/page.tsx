@@ -1,17 +1,19 @@
-"use client";
+'use client'
 
-import { useState } from "react";
-import InputForm from "@/components/InputForm";
-import FailureProbabilityCard from "@/components/FailureProbabilityCard";
-import OptimalIntervalCard from "@/components/OptimalIntervalCard";
-import ReliabilityCard from "@/components/ReliabilityCard";
+import { useState } from 'react'
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
+import InputForm from '@/components/InputForm'
+import FailureProbabilityCard from '@/components/FailureProbabilityCard'
+import OptimalIntervalCard from '@/components/OptimalIntervalCard'
+import ReliabilityCard from '@/components/ReliabilityCard'
 
 export default function Calculator() {
-  const [results, setResults] = useState<any>(null);
+  const [results, setResults] = useState<any>(null)
 
   const handleCalculate = (data: any) => {
-    setResults(data);
-  };
+    setResults(data)
+  }
 
   return (
     <div className="space-y-6">
@@ -25,5 +27,6 @@ export default function Calculator() {
         </div>
       )}
     </div>
-  );
+  )
 }
+

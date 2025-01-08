@@ -13,6 +13,7 @@ import Link from 'next/link'
 import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert"
 import { useSettings } from '@/lib/settings-context'
 import { formatNumber } from '@/lib/utils'
+import withAuth from "@/components/withAuth";
 
 const schema = z.object({
   mtbfProtective: z.number().positive(),
@@ -70,26 +71,30 @@ function formatInterval(years: number, decimalSeparator: '.' | ','): string {
   }
 }
 
-export default function RiskBasedFFICalculator() {
-  const [result, setResult] = useState<number | null>(null)
-  const [warnings, setWarnings] = useState<string[]>([])
-  const { settings } = useSettings()
+function RiskBasedFFICalculator() {
+  const [result, setResult] = useState<number | null>(null);
+  const [warnings, setWarnings] = useState<string[]>([]);
+  const { settings } = useSettings();
 
-  const { register, handleSubmit, formState: { errors } } = useForm<Inputs>({
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<Inputs>({
     resolver: zodResolver(schema),
     defaultValues: {
       mtbfProtective: 10,
       meanPeriodBetweenDemands: 5,
       mtbmf: 100,
       parallelDevices: 1,
-    }
-  })
+    },
+  });
 
   const onSubmit: SubmitHandler<Inputs> = (data) => {
-    const ffi = calculateRiskBasedFFI(data)
-    setResult(ffi)
-    setWarnings(checkWarnings(data, ffi))
-  }
+    const ffi = calculateRiskBasedFFI(data);
+    setResult(ffi);
+    setWarnings(checkWarnings(data, ffi));
+  };
 
   return (
     <div className="space-y-6">
@@ -105,7 +110,8 @@ export default function RiskBasedFFICalculator() {
         <InfoIcon className="h-4 w-4" />
         <AlertTitle>Information</AlertTitle>
         <AlertDescription>
-          This formula can be used to calculate the failure finding interval in any situation. It is the most rigorous equation and should be used for situations where the multiple failure has extremely high consequences, including safety or the environment.
+          This formula can be used to calculate the failure finding interval in any situation. It is the most rigorous equation and should be used for
+          situations where the multiple failure has extremely high consequences, including safety or the environment.
         </AlertDescription>
       </Alert>
       <Card>
@@ -117,25 +123,27 @@ export default function RiskBasedFFICalculator() {
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             <div>
               <Label htmlFor="mtbfProtective">MTBF of the Protective Device (years)</Label>
-              <Input id="mtbfProtective" type="number" step="0.1" {...register('mtbfProtective', { valueAsNumber: true })} />
+              <Input id="mtbfProtective" type="number" step="0.1" {...register("mtbfProtective", { valueAsNumber: true })} />
               {errors.mtbfProtective && <span className="text-destructive">This field is required and must be positive</span>}
             </div>
             <div>
               <Label htmlFor="meanPeriodBetweenDemands">Mean Period Between Demands on the Protective Device (years)</Label>
-              <Input id="meanPeriodBetweenDemands" type="number" step="0.1" {...register('meanPeriodBetweenDemands', { valueAsNumber: true })} />
+              <Input id="meanPeriodBetweenDemands" type="number" step="0.1" {...register("meanPeriodBetweenDemands", { valueAsNumber: true })} />
               {errors.meanPeriodBetweenDemands && <span className="text-destructive">This field is required and must be positive</span>}
             </div>
             <div>
               <Label htmlFor="mtbmf">Mean Time Between Multiple Failures (years)</Label>
-              <Input id="mtbmf" type="number" step="0.1" {...register('mtbmf', { valueAsNumber: true })} />
+              <Input id="mtbmf" type="number" step="0.1" {...register("mtbmf", { valueAsNumber: true })} />
               {errors.mtbmf && <span className="text-destructive">This field is required and must be positive</span>}
             </div>
             <div>
               <Label htmlFor="parallelDevices">Number of Parallel Protective Devices</Label>
-              <Input id="parallelDevices" type="number" step="1" {...register('parallelDevices', { valueAsNumber: true })} />
+              <Input id="parallelDevices" type="number" step="1" {...register("parallelDevices", { valueAsNumber: true })} />
               {errors.parallelDevices && <span className="text-destructive">This field is required and must be a positive integer</span>}
             </div>
-            <Button type="submit" className="w-full bg-primary text-primary-foreground hover:bg-primary/90">Calculate Risk Based FFI</Button>
+            <Button type="submit" className="w-full bg-primary text-primary-foreground hover:bg-primary/90">
+              Calculate Risk Based FFI
+            </Button>
           </form>
         </CardContent>
       </Card>
@@ -145,7 +153,10 @@ export default function RiskBasedFFICalculator() {
             <CardTitle className="text-2xl text-primary">Result</CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-lg">Calculated Risk Based Failure Finding Interval: <span className="font-semibold">{result !== null ? formatInterval(result, settings.decimalSeparator) : ''}</span></p>
+            <p className="text-lg">
+              Calculated Risk Based Failure Finding Interval:{" "}
+              <span className="font-semibold">{result !== null ? formatInterval(result, settings.decimalSeparator) : ""}</span>
+            </p>
 
             {warnings.length > 0 && (
               <div className="space-y-4">
@@ -162,6 +173,8 @@ export default function RiskBasedFFICalculator() {
         </Card>
       )}
     </div>
-  )
+  );
 }
 
+
+export default withAuth(RiskBasedFFICalculator);

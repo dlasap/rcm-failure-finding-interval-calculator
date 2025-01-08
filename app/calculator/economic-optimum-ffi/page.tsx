@@ -12,7 +12,8 @@ import { ArrowLeft, InfoIcon } from "lucide-react";
 import Link from "next/link";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { useSettings } from "@/lib/settings-context";
-import { formatNumber } from "@/lib/utils";
+import { formatCurrency, formatNumber } from "@/lib/utils";
+import withAuth from "@/components/withAuth";
 
 const schema = z.object({
   mtbfProtective: z.number().positive(),
@@ -76,7 +77,7 @@ function formatInterval(years: number, decimalSeparator: "." | ","): string {
   }
 }
 
-export default function EconomicOptimumFFICalculator() {
+function EconomicOptimumFFICalculator() {
   const [result, setResult] = useState<number | null>(null);
   const [warnings, setWarnings] = useState<string[]>([]);
   const { settings } = useSettings();
@@ -84,6 +85,7 @@ export default function EconomicOptimumFFICalculator() {
     register,
     handleSubmit,
     formState: { errors },
+    watch,
   } = useForm<Inputs>({
     resolver: zodResolver(schema),
     defaultValues: {
@@ -119,7 +121,7 @@ export default function EconomicOptimumFFICalculator() {
         </Button>
         <h1 className="text-3xl font-bold text-primary">Economic Optimum Failure Finding Interval Calculator</h1>
       </div>
-      <Alert variant="default" className="mt-4 mb-6">
+      <Alert variant="info" className="mt-4 mb-6">
         <InfoIcon className="h-4 w-4" />
         <AlertDescription>
           This formula can only be used where the consequences of the multiple failure are economic (it cannot be used where they affect safety or the
@@ -191,3 +193,5 @@ export default function EconomicOptimumFFICalculator() {
     </div>
   );
 }
+
+export default withAuth(EconomicOptimumFFICalculator);
